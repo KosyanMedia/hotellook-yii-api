@@ -1,6 +1,6 @@
 <?php
 
-namespace hotellook\api;
+namespace hotellook\composer\api;
 
 class Exception extends \CException { }
 
