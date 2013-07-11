@@ -5,7 +5,9 @@ Installation
 2. Add namespace alias to your application's config:
 
         ...
-        'hotellook.composer.api' => 'application.vendor.aviasales.hotellook-yii-api',
+        'aliases' => array(
+            'hotellook.composer.api' => 'application.vendor.aviasales.hotellook-yii-api',
+        ),
         ...
 
 3. Add application component
