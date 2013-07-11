@@ -2,11 +2,27 @@
     "name": "aviasales/hotellook-yii-api",
     "require": {
         "php": ">=5.3.0",
-	"yiisoft/yii": "*"
+        "yiisoft/yii": "*"
     },
-    "autoload": {
-        "psr-0": {
-            "hotellook\\api\\": "."
+    "authors": [
+        {
+            "name": "Павел Кноблох",
+            "email": "pavel.knoblokh@aviasales.ru"
+        },
+        {
+            "name": "Александр Романов",
+            "email": "sannysoft@gmail.com"
+        },
+        {
+            "name": "Данил Ряшенцев",
+            "email": "vzzhobbot@gmail.com"
+        },
+        {
+            "name": "Андрей Янцен",
+            "email": "andrey@janzen.su"
         }
+    ],
+    "autoload": {
+        "classmap": ["."]
     }
 }

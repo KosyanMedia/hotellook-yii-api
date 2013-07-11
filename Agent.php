@@ -139,7 +139,7 @@ class Agent extends \CApplicationComponent
 
     /**
      * @param $duration
-     * @return HlApiAgent
+     * @return Agent
      */
     public function cache($duration)
     {
@@ -161,15 +161,11 @@ class Agent extends \CApplicationComponent
     {
         $url = rtrim($this->host, '/') . '/v' . $this->version . '/' . $method . '.' . $format;
         $headers = array(
-            'User-Agent' => 'HlApiAgent',
+            'User-Agent' => 'Hotellook Api Agent',
         );
 
         if ($auth) {
-            if ($this->version == 1) {
-                $this->signV1Params($params);
-            } elseif ($this->version == 2) {
-                $headers['X-Access-Token'] = $this->token;
-            }
+            $this->signV1Params($params);
         }
 
         if (!empty($params)) {
