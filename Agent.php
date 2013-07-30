@@ -23,6 +23,7 @@ class Agent extends \CApplicationComponent
     public $token;
     public $profile = false;
     public $version = 1;
+    public $marker;
 
     private $_queryCacheDuration = null;
 
@@ -70,6 +71,26 @@ class Agent extends \CApplicationComponent
         $params['login'] = $this->login;
         $signature = hash_hmac('sha1', $paramsStr, $this->token);
         $params['signature'] = $signature;
+
+        return $signature;
+    }
+
+    /**
+     * Генерирует подпись к запросу
+     *
+     * @param array $params
+     * @return string
+     */
+    public function signV2Params(array &$params)
+    {
+        unset($params['marker'], $params['enable_api_auth'], $params['signature']);
+        ksort($params);
+
+        $signature = md5("{$this->token}:{$this->marker}" . implode(':', array_values($params)));
+
+        $params['signature'] = $signature;
+        $params['marker'] = $this->marker;
+        $params['enable_api_auth'] = true;
 
         return $signature;
     }
@@ -165,7 +186,14 @@ class Agent extends \CApplicationComponent
         );
 
         if ($auth) {
-            $this->signV1Params($params);
+            switch ($this->version) {
+                case 1:
+                    $this->signV1Params($params);
+                    break;
+                case 2:
+                    $this->signV2Params($params);
+                    break;
+            }
         }
 
         if (!empty($params)) {
