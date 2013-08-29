@@ -136,9 +136,9 @@ class Agent extends \CApplicationComponent
             if (empty($ret)) {
                 $ret = call_user_func_array(array($this, '_request'), $params);
 
-		if (!$ret) {
-			throw new Exception('Empty response');
-		}
+                if (!$ret) {
+                    throw new Exception('Empty response');
+                }
 
                 if ($this->_queryCacheDuration > 0) {
                     Yii::app()->cache->set($cacheKey, $ret, $this->_queryCacheDuration);
@@ -152,7 +152,13 @@ class Agent extends \CApplicationComponent
                     $ret = json_decode($ret, true);
                     if ($ret['status'] == 'error') {
                         Yii::app()->cache->delete($cacheKey);
-                        throw new Exception(empty($ret['message']) ? 'Unknown error' : $ret['message']);
+
+                        $message = empty($ret['message']) ? 'Unknown error' : $ret['message'];
+                        if (!empty($ret['file'])) {
+                            $message .= ' in ' . $ret['file'] . ':' . $ret['line'];
+                        }
+
+                        throw new Exception($message);
                     }
                     break;
                 case 'xml':
