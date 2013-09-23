@@ -109,6 +109,10 @@ class Agent extends \CApplicationComponent
                 throw new Exception('Unknown method');
             }
 
+            if ($this->profile) {
+                Yii::beginProfile($match[2] . ':' . $match[1], 'hl.api');
+            }
+
             if (count($args) < 1) {
                 throw new Exception('Method is not defined');
             }
@@ -165,6 +169,11 @@ class Agent extends \CApplicationComponent
                     $ret = simplexml_load_string($ret);
                     break;
             }
+
+            if ($this->profile) {
+                Yii::endProfile($match[2] . ':' . $match[1], 'hl.api');
+            }
+
         } else {
             throw new Exception('Unknown method');
         }
@@ -266,7 +275,7 @@ class Agent extends \CApplicationComponent
         $ret = file_get_contents($url, false, $context);
 
         if ($this->profile) {
-            Yii::beginProfile($httpMethod . ':' . $url, 'hl.api');
+            Yii::endProfile($httpMethod . ':' . $url, 'hl.api');
         }
 
         return $ret;
