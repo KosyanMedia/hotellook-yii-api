@@ -19,7 +19,7 @@ use Yii;
 class Agent extends \CApplicationComponent
 {
     public $login;
-    public $host;
+    public $host = 'http://engine.hotellook.com/api';
     public $token;
     public $profile = false;
     public $version = 1;
@@ -86,11 +86,12 @@ class Agent extends \CApplicationComponent
         unset($params['marker'], $params['enable_api_auth'], $params['signature']);
         ksort($params);
 
-        $signature = md5("{$this->token}:{$this->marker}" . implode(':', array_values($params)));
+        $signature = md5("{$this->token}:{$this->marker}"
+            . (empty($params) ? '' : ':' . implode(':', array_values($params))));
 
         $params['signature'] = $signature;
         $params['marker'] = $this->marker;
-        $params['enable_api_auth'] = true;
+        $params['enable_api_auth'] = 1;
 
         return $signature;
     }
