@@ -1,7 +1,10 @@
 Installation
 ============
 
-1. Grab package via composer
+1. Grab package via composer:
+ 
+        $ composer require aviasales/hotellook-yii-api
+
 2. Add namespace alias to your application's config:
 
         ...
