@@ -75,22 +75,31 @@ class Agent extends \CApplicationComponent
         return $signature;
     }
 
+    public static function reduceArray($v, $c)
+    {
+        if (is_array($c)) {
+            $v = array_reduce($c, [get_called_class(), 'reduceArray'], $v);
+        } else {
+            $v .= ':' . $c;
+        }
+        return $v;
+    }
+
     /**
      * Генерирует подпись к запросу
      *
      * @param array $params
      * @return string
      */
-    public function signV2Params(array &$params)
+    public static function signV2Params(array &$params, $token, $marker)
     {
         unset($params['marker'], $params['enable_api_auth'], $params['signature']);
         ksort($params);
 
-        $signature = md5("{$this->token}:{$this->marker}"
-            . (empty($params) ? '' : ':' . implode(':', array_values($params))));
+        $signature = md5(static::reduceArray("{$token}:{$marker}", $params));
 
         $params['signature'] = $signature;
-        $params['marker'] = $this->marker;
+        $params['marker'] = $marker;
         $params['enable_api_auth'] = 1;
 
         return $signature;
@@ -215,7 +224,7 @@ class Agent extends \CApplicationComponent
                     $this->signV1Params($params);
                     break;
                 case 2:
-                    $this->signV2Params($params);
+                    static::signV2Params($params, $this->token, $this->marker);
                     break;
             }
         }
